@@ -15,19 +15,18 @@ type token struct {
 	accessToken   string
 	accessTokenAt time.Time
 	expires       time.Duration
-	mutex         sync.Mutex
 }
 
 type AccessTokenService struct {
 	mutex  sync.Mutex
-	tokens map[string]token
+	tokens map[string]*token
 }
 
 var ats *AccessTokenService
 
 func init() {
 	ats = &AccessTokenService{
-		tokens: make(map[string]token),
+		tokens: make(map[string]*token),
 	}
 }
 
@@ -78,7 +77,7 @@ func (ats *AccessTokenService) GetToken(ctx context.Context, key string, getToke
 			ch <- err
 			return
 		} else {
-			ats.tokens[key] = token{
+			ats.tokens[key] = &token{
 				accessToken:   accessToken,
 				accessTokenAt: time.Now(),
 				expires:       expires,
@@ -92,11 +91,11 @@ func (ats *AccessTokenService) GetToken(ctx context.Context, key string, getToke
 	case <-ctx.Done():
 		return "", utils.Error("get token timeout")
 	case val := <-ch:
-		switch val.(type) {
+		switch v := val.(type) {
 		case error:
-			return "", val.(error)
+			return "", v
 		case string:
-			return val.(string), nil
+			return v, nil
 		default:
 			return "", utils.Error("wrong token type")
 		}

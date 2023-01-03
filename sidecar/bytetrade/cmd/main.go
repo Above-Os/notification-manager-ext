@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 	"sync"
 
 	"github.com/emicklei/go-restful"
@@ -100,7 +101,14 @@ func handler(req *restful.Request, resp *restful.Response) {
 
 	fmt.Printf("get tenants with namespace `%s`", ns)
 
-	tenants := []string{ns}
+	// bytetrade ns format [ <app name>-<user name>]
+	strtoken := strings.Split(ns, "-")
+	if len(strtoken) < 2 {
+		responseWithHeaderAndEntity(resp, http.StatusNotFound, "")
+		return
+	}
+
+	tenants := []string{strtoken[len(strtoken)-1]}
 	responseWithJson(resp, tenants)
 }
 

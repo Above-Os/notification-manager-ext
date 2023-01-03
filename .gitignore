@@ -1,4 +1,3 @@
-
 # Binaries for programs and plugins
 *.exe
 *.exe~
@@ -6,6 +5,7 @@
 *.so
 *.dylib
 bin
+tenant-sidecar
 
 # Test binary, build with `go test -c`
 *.test
@@ -25,3 +25,4 @@ bin
 
 # text files
 *.log
+sidecar/bytetrade/tenant-sidecar
