@@ -39,6 +39,8 @@ const (
 	defaultServiceAccountName     = "default"
 	kubesphereSidecar             = "kubesphere"
 	defaultkubesphereSidecarImage = "kubesphere/kubesphere-sidecar:v3.2.0"
+	bytetradeSidecar              = "bytetrade"
+	defaultBytetradeSidecarImage  = "bytetrade/notification-tenant-sidecar:v0.1.0"
 )
 
 var (
@@ -247,11 +249,46 @@ func (r *NotificationManagerReconciler) mutateTenantSidecar(nm *v2beta2.Notifica
 		return nil
 	}
 
+	if sidecar.Type == bytetradeSidecar {
+		return r.generateBytetradeSidecar(sidecar, nm)
+	}
+
 	if sidecar.Type == kubesphereSidecar {
 		return r.generateKubesphereSidecar(sidecar, nm)
 	}
 
 	return sidecar.Container
+}
+
+func (r *NotificationManagerReconciler) generateBytetradeSidecar(sidecar *v2beta2.Sidecar, nm *v2beta2.NotificationManager) *corev1.Container {
+
+	container := sidecar.Container
+	if container == nil {
+		container = &corev1.Container{
+			Name:            "tenant-sidecar",
+			ImagePullPolicy: "IfNotPresent",
+		}
+	}
+
+	if utils.StringIsNil(container.Image) {
+		container.Image = defaultBytetradeSidecarImage
+	}
+
+	if container.Ports == nil || len(container.Ports) == 0 {
+		container.Ports = []corev1.ContainerPort{
+			{
+				Name:          "tenant",
+				ContainerPort: 19094,
+				Protocol:      corev1.ProtocolTCP,
+			},
+		}
+	}
+
+	if nm.Spec.Env != nil {
+		container.Env = append(container.Env, nm.Spec.Env...)
+	}
+
+	return container
 }
 
 func (r *NotificationManagerReconciler) generateKubesphereSidecar(sidecar *v2beta2.Sidecar, nm *v2beta2.NotificationManager) *corev1.Container {
