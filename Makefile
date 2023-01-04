@@ -17,7 +17,7 @@ endif
 all: manager
 
 # Run tests
-test: fmt vet manifests
+test: generate fmt vet manifests
 	go test ./... -coverprofile cover.out
 
 # Build binary
@@ -131,10 +131,10 @@ ifeq (, $(shell which controller-gen))
 	CONTROLLER_GEN_TMP_DIR=$$(mktemp -d) ;\
 	cd $$CONTROLLER_GEN_TMP_DIR ;\
 	go mod init tmp ;\
-	go get sigs.k8s.io/controller-tools/cmd/controller-gen@v0.4.1 ;\
+	go install sigs.k8s.io/controller-tools/cmd/controller-gen@v0.4.1 ;\
 	rm -rf $$CONTROLLER_GEN_TMP_DIR ;\
 	}
-CONTROLLER_GEN=$(GOBIN)/controller-gen
+CONTROLLER_GEN=$(GOPATH)/bin/controller-gen
 else
 CONTROLLER_GEN=$(shell which controller-gen)
 endif
