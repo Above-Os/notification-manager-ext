@@ -15,6 +15,7 @@ on:
 #   OP_IMAGE: kubesphere/notification-manager-operator:latest
 #   NM_IMAGE: kubesphere/notification-manager:latest
 
+
 jobs:
   test:
     runs-on: ubuntu-latest
