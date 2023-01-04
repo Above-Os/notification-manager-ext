@@ -44,6 +44,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
+      
+      - name: get latest tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        id: get-latest-tag
 
       - name: Set up QEMU
         id: qemu
@@ -64,5 +68,4 @@ jobs:
 
       - name: Build and Push image
         run: |
-          tag=$(cat VERSION | tr -d " \t\n\r")
-          make build-nm -e NM_IMG=${{ env.REPO_NM }}/notification-manager-ext:$tag
+          make build-nm -e NM_IMG=${{ env.REPO_NM }}/notification-manager-ext:${{ steps.get-latest-tag.outputs.tag }}
