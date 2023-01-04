@@ -18,17 +18,8 @@ name: WorkFlow for Building operator image
 
 on:
   push:
-    branches:
-      - 'master'
     tags:
       - 'v*'
-    paths:
-      - '.github/workflows/**'
-      - 'controllers/**'
-      - 'cmd/operator/**'
-      - 'pkg/**'
-      - 'go.sum'
-      - 'go.mod'
 
 env:
   REPO_OP: 'bytetrade'
