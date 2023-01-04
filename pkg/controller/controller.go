@@ -615,7 +615,8 @@ func getMatchedConfig(r internal.Receiver, configs map[string]map[string]interna
 func (c *Controller) RcvsFromNs(namespace *string) []internal.Receiver {
 
 	// Global receiver should receive all notifications.
-	tenants := []string{globalTenantID}
+	//tenants := []string{globalTenantID}
+	tenants := []string{}
 	if namespace != nil && len(*namespace) > 0 {
 		// Get all tenants which need to receive the notifications in this namespace.
 		tenantIDs, err := c.tenantIDFromNs(*namespace)
