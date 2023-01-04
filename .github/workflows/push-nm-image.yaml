@@ -46,8 +46,10 @@ jobs:
           fetch-depth: 1
       
       - name: get latest tag
-        uses: actions-ecosystem/action-get-latest-tag@v1
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
         id: get-latest-tag
+        with:
+          fallback: latest
 
       - name: Set up QEMU
         id: qemu
