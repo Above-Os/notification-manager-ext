@@ -22,7 +22,7 @@ jobs:
             - name: Build and push Docker image 
               uses: docker/build-push-action@v3
               with:
-                  context: "{{defaultContext}}:sidecar/bytetrade"
+                  context: ./sidecar/bytetrade
                   push: true
                   tags: bytetrade/notification-tenant-sidecar:${{ github.event.inputs.tags }}
                   file: Dockerfile
