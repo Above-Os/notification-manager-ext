@@ -10,7 +10,7 @@ FROM golang:1.13 as tenant-sidecar
 
 COPY cmd/main.go /
 WORKDIR /
-ENV GOPROXY=https://goproxy.io
+# ENV GOPROXY=https://goproxy.io
 RUN CGO_ENABLED=0 GO111MODULE=on go build -i -ldflags '-w -s' -o tenant-sidecar main.go
 
 FROM kubespheredev/distroless-static:nonroot
