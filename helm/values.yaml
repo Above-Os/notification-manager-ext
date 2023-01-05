@@ -25,8 +25,8 @@ operator:
           memory: 10Mi
     operator:
       image:
-        repo: kubesphere/notification-manager-operator
-        tag: v2.1.0
+        repo: bytetrade/notification-manager-operator-ext
+        tag: v0.1.0-ext
         pullPolicy: IfNotPresent
       resources:
         limits:
@@ -43,8 +43,8 @@ operator:
 # value of notification-manager
 notificationmanager:
   image:
-    repo: kubesphere/notification-manager
-    tag: v2.1.0
+    repo: bytetrade/notification-manager-ext
+    tag: v0.1.0-ext
     pullPolicy: IfNotPresent
   replicas: 1
   resources:

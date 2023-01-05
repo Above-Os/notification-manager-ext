@@ -26,3 +26,4 @@ tenant-sidecar
 # text files
 *.log
 sidecar/bytetrade/tenant-sidecar
+.vscode

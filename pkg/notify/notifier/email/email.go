@@ -152,14 +152,22 @@ func (n *Notifier) Notify(ctx context.Context, data *template.Data) error {
 	}
 
 	body := ""
-	if n.receiver.TmplType != constants.Text {
+	if n.receiver.TmplType == constants.Text {
 		body, err = n.tmpl.Text(n.receiver.TmplName, data)
-	} else if n.receiver.TmplType != constants.HTML {
+		if err != nil {
+			level.Error(n.logger).Log("msg", "EmailNotifier: parse text template error", "err:", err)
+		}
+	} else if n.receiver.TmplType == constants.HTML {
 		body, err = n.tmpl.Html(n.receiver.TmplName, data)
+		if err != nil {
+			level.Error(n.logger).Log("msg", "EmailNotifier: parse html template error", "err:", err)
+		}
 	} else {
 		_ = level.Error(n.logger).Log("msg", "EmailNotifier: unknown message type", "type", n.receiver.TmplType)
 		return utils.Errorf("Unknown message type, %s", n.receiver.TmplType)
 	}
+
+	level.Debug(n.logger).Log("msg", "sending mail", "body size", len(body))
 
 	group := async.NewGroup(ctx)
 	for _, t := range n.receiver.To {
@@ -183,6 +191,9 @@ func (n *Notifier) send(ctx context.Context, to, subject, body string) error {
 			return err
 		}
 		conn, err = tls.Dial("tcp", addr, tlsConfig)
+		if err != nil {
+			return err
+		}
 	} else {
 		d := net.Dialer{}
 		conn, err = d.DialContext(ctx, "tcp", addr)

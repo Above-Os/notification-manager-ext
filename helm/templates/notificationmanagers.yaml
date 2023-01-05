@@ -38,9 +38,9 @@ spec:
   {{- if eq .Values.kubesphere true }}
   sidecars:
     tenant:
-      image: kubesphere/notification-tenant-sidecar:v3.2.0
+      image: bytetrade/notification-tenant-sidecar:v0.1.0
       name: tenant
-      type: kubesphere
+      type: bytetrade
   {{- end}}
   template:
     {{- toYaml .Values.notificationmanager.template | nindent 4 }}
