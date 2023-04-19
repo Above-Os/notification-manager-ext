@@ -9,9 +9,11 @@
 FROM golang:1.19 as tenant-sidecar
 
 COPY cmd/main.go /
+COPY go.mod /
+
 WORKDIR /
 # ENV GOPROXY=https://goproxy.io
-RUN CGO_ENABLED=0 GO111MODULE=on go build -i -ldflags '-w -s' -o tenant-sidecar main.go
+RUN go mod tidy && CGO_ENABLED=0 GO111MODULE=on go build -i -ldflags '-w -s' -o tenant-sidecar main.go
 
 FROM kubespheredev/distroless-static:nonroot
 WORKDIR /
