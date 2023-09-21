@@ -114,16 +114,20 @@ func (n *Notifier) Notify(ctx context.Context, data *template.Data) error {
 			request.Header.Set("Authorization", fmt.Sprintf("Bearer %s", bearer))
 		} else if n.receiver.HttpConfig.BasicAuth != nil {
 			pass := ""
-			if n.receiver.HttpConfig.BasicAuth.Password != nil {
-				p, err := n.notifierCtl.GetCredential(n.receiver.HttpConfig.BasicAuth.Password)
-				if err != nil {
-					_ = level.Error(n.logger).Log("msg", "WebhookNotifier: get password error", "error", err.Error())
-					return err
-				}
+			if n.receiver.HttpConfig.BasicAuth.Username == "Terminus-Nonce" {
+				request.Header.Set(n.receiver.HttpConfig.BasicAuth.Username, n.receiver.HttpConfig.BasicAuth.Password.Value)
+			} else {
+				if n.receiver.HttpConfig.BasicAuth.Password != nil {
+					p, err := n.notifierCtl.GetCredential(n.receiver.HttpConfig.BasicAuth.Password)
+					if err != nil {
+						_ = level.Error(n.logger).Log("msg", "WebhookNotifier: get password error", "error", err.Error())
+						return err
+					}
 
-				pass = p
+					pass = p
+				}
+				request.SetBasicAuth(n.receiver.HttpConfig.BasicAuth.Username, pass)
 			}
-			request.SetBasicAuth(n.receiver.HttpConfig.BasicAuth.Username, pass)
 		}
 	}
 
