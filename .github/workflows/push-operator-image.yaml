@@ -22,7 +22,7 @@ on:
       - 'v*'
 
 env:
-  REPO_OP: 'bytetrade'
+  REPO_OP: 'beclab'
 
 jobs:
   build:
